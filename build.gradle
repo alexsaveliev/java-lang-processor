@@ -1,0 +1,53 @@
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = "com.sourcegraph.langp.Main"
+version = '0.0.1-SNAPSHOT'
+group = 'com.sourcegraph'
+
+repositories {
+	mavenCentral()
+}
+
+sourceCompatibility = '1.8'
+
+dependencies {
+	compile 'com.beust:jcommander:1.30'
+
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+	compile 'commons-io:commons-io:2.4'
+
+    compile 'org.apache.maven:maven-core:3.3.9'
+    compile 'org.apache.maven:maven-model:3.3.9'
+    compile 'org.eclipse.aether:aether-transport-file:1.1.0'
+    compile 'org.eclipse.aether:aether-transport-http:1.1.0'
+    compile 'org.eclipse.aether:aether-connector-basic:1.1.0'
+
+    compile 'com.google.code.gson:gson:2.3'
+
+	compile 'org.apache.ant:ant:1.9.6'
+
+	compile 'org.slf4j:slf4j-api:1.7.12'
+	runtime 'org.slf4j:slf4j-log4j12:1.7.12'
+}
+
+jar {
+	def gitRef = "sh -c 'git rev-parse --short HEAD || git ls-remote https://github.com/alexsaveliev/java-lang-processor master | awk \"{ print \\\$1 }\" || echo snapshot'".execute().text.trim()
+
+	manifest {
+		attributes "Main-Class" : mainClassName
+		attributes "Version" : gitRef
+	}
+
+	dependsOn configurations.runtime
+
+	from {
+		configurations.runtime.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	} {
+		exclude "META-INF/*.SF"
+		exclude "META-INF/*.DSA"
+		exclude "META-INF/*.RSA"
+	}
+}
