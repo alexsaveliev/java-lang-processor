@@ -153,8 +153,10 @@ class MavenConfiguration {
                 }
             }
             configuration.classPath = classPath;
-            try (FileWriter writer = new FileWriter(entry.getKey().getParent().resolve(".jls-config").toFile())) {
+            Path jsonConfig = entry.getKey().getParent().resolve(".jls-config");
+            try (FileWriter writer = new FileWriter(jsonConfig.toFile())) {
                 JSONUtil.write(configuration, writer);
+                LOGGER.info("Wrote {}", jsonConfig);
             } catch (IOException e) {
                 LOGGER.warn("Failed to save configuration", e);
             }

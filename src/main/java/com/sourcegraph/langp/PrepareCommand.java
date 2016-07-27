@@ -21,8 +21,8 @@ public class PrepareCommand {
 
         Path path = Paths.get(workspace);
         try {
-            if (MavenConfiguration.prepare(path)) {
-                return;
+            if (!MavenConfiguration.prepare(path) && !GradleConfiguration.prepare(path)) {
+                DefaultConfiguration.prepare(path);
             }
         } catch (Exception e) {
             LOGGER.error("Unexpected error occurred while collecting source units", e);
