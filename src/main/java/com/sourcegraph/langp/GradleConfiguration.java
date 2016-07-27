@@ -79,13 +79,7 @@ class GradleConfiguration {
                     }
                 }
                 Project p = projectsCache.get(entry.getKey());
-                Path jsonConfig = Paths.get(p.projectDir).resolve(".jls-config");
-                try (FileWriter writer = new FileWriter(jsonConfig.toFile())) {
-                    JSONUtil.write(configuration, writer);
-                    LOGGER.info("Wrote {}", jsonConfig);
-                } catch (IOException e) {
-                    LOGGER.warn("Failed to save configuration", e);
-                }
+                configuration.write(path, Paths.get(p.projectDir).resolve(".jls-config"));
             }
 
         }

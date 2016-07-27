@@ -3,7 +3,6 @@ package com.sourcegraph.langp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -29,13 +28,7 @@ class DefaultConfiguration {
         LanguageServerConfiguration configuration = new LanguageServerConfiguration();
         configuration.classPath = new LinkedList<>();
         configuration.sources = directories;
-        Path jsonConfig = path.resolve(".jls-config");
-        try (FileWriter writer = new FileWriter(jsonConfig.toFile())) {
-            JSONUtil.write(configuration, writer);
-            LOGGER.info("Wrote {}", jsonConfig);
-        } catch (IOException e) {
-            LOGGER.warn("Failed to save configuration", e);
-        }
+        configuration.write(path, path.resolve(".jls-config"));
 
         return true;
     }
